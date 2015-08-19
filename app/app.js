@@ -3,7 +3,7 @@
 
   angular
       .module('starterApp', ['ngMaterial', 'muppets'])
-      .controller('AppCtrl', ['$scope', '$mdSidenav', 'muppetsService', MuppetAppController ])
+      .controller('AppCtrl', ['$scope', 'muppetsService', '$mdSidenav', '$mdBottomSheet', '$log', MuppetAppController ])
       .config(function($mdThemingProvider) {
         $mdThemingProvider.theme('default')
           .primaryColor('brown')
@@ -17,13 +17,37 @@
    * @param muppetService
    * @constructor
    */
-  function MuppetAppController($scope, $mdSidenav, muppetsService) {
+  function MuppetAppController($scope, muppetsService, $mdSidenav, $mdBottomSheet, $log) {
     var allMuppets = [ ];
 
     $scope.muppets       = allMuppets;
     $scope.selected      = null;
     $scope.selectMuppet  = selectMuppet;
     $scope.toggleSidenav = toggleSideNav;
+
+     /*
+    show bottom sheet
+    */
+    $scope.showActions = function ($event) {
+      $mdBottomSheet.show({
+
+        parent: angular.element(document.getElementById('content')),
+        template: '<md-bottom-sheet class="md-list md-has-header">' +
+                      '<md-subheader>Muppet Actions</md-subheader>' +
+                      '<md-list>' +
+                        '<md-item ng-repeat="item in vm.items">' +
+                          '<md-button ng-click="vm.performAction(item)">{{item.name}}</md-button>' +
+                      '</md-item>' +
+                      '</md-list>' +
+                  '</md-bottom-sheet>',
+        bindToController: true,
+        controllerAs: 'vm',
+        contorller: ['$mdBottomSheet', MuppetAppController],
+        targetEvent: $event
+      }).then(function (clickedItem) {
+        $log.debug( clickedItem.name + 'clicked');
+      });
+    };
 
     loadMuppets();
 
