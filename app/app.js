@@ -51,15 +51,15 @@
      * Hide or Show the sideNav area
      * @param menuId
      */
-    function toggleSideNav( menuId ) {
-      $mdSidenav(menuId).toggle();
+    function toggleSideNav( name ) {
+      $mdSidenav(name).toggle();
     }
 
     /**
      * Select the current muppet
      * @param menuId
      */
-    function selectMuppet (muppet) {
+    function selectMuppet ( muppet ) {
         $scope.selected = angular.isNumber(muppet) ? $scope.muppets[muppet] : muppet;
         $scope.toggleSidenav('left');
     }
